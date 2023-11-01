@@ -77,7 +77,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build -r https://github.com/zkr-1211/3d.git -b gh-pages",
     "vercel": "vercel --prod"
   },
   "eslintConfig": {
