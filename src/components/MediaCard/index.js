@@ -22,7 +22,7 @@ export default function MediaCard(props) {
               {props.title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {props.description}
+              {props.description}1
             </Typography>
           </CardContent>
         </CardActionArea>
