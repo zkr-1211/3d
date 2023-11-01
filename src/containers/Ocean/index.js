@@ -12,6 +12,10 @@ import islandModel from '@/containers/Ocean/models/island.glb'
 import issum_the_town_on_capital_isle from '@/containers/Ocean/models/issum_the_town_on_capital_isle.glb'
 import flamingoModel from '@/containers/Ocean/models/flamingo.glb'
 import fh from '@/containers/Ocean/models/fh.glb'
+import primoGroudon from '@/containers/Ocean/models/primo_groudon.glb'
+import kyogrePrimal from '@/containers/Ocean/models/kyogre_primal.glb'
+import rayquazaRemastered from '@/containers/Ocean/models/rayquaza_remastered.glb'
+import zapdosGalarian from '@/containers/Ocean/models/zapdos_galarian.glb'
 import Animations from '@/assets/utils/animations'
 import vertexShader from '@/containers/Ocean/shaders/rainbow/vertex.glsl'
 import fragmentShader from '@/containers/Ocean/shaders/rainbow/fragment.glsl'
@@ -87,7 +91,7 @@ export default class Earth extends React.Component {
     // 设置控制器的最小距离
     controls.minDistance = 50
     // 设置控制器的最大距离
-    controls.maxDistance = 1200
+    controls.maxDistance = 350
     // 平移速度
     // controls.panSpeed = 0.8
     // controls.mouseButtons = {
@@ -218,9 +222,9 @@ export default class Earth extends React.Component {
       if (Math.floor((loaded / total) * 100) === 100) {
         this.setState({ loadingProcess: Math.floor((loaded / total) * 100) })
         // 执行动画，让相机移动到指定位置，并设置场景准备完毕
-        Animations.animateCamera(camera, controls, { x: 0, y: 40, z: 140 }, { x: 0, y: 0, z: 0 }, 4000, () => {
-          this.setState({ sceneReady: true })
-        })
+        // Animations.animateCamera(camera, controls, { x: 0, y: 40, z: 140 }, { x: 0, y: 0, z: 0 }, 1000, () => {
+        //   this.setState({ sceneReady: true })
+        // })
       } else {
         this.setState({ loadingProcess: Math.floor((loaded / total) * 100) })
       }
@@ -270,7 +274,7 @@ export default class Earth extends React.Component {
       scene.add(mesh.scene)
     })
 
-    // 鸟1
+    // 鸟
     const radius = 200 // 圆形轨道半径
     const speed = 0.01 // 绕行速度
     let rotationAngle = 0 // 初始旋转角度
@@ -299,7 +303,7 @@ export default class Earth extends React.Component {
       // 创建一个动画混合器，并将其赋值给mixer
       const mixer = new THREE.AnimationMixer(mesh)
       // 设置动画混合器的持续时间，并播放动画
-      mixer.clipAction(gltf.animations[0]).setDuration(1.2).play()
+      mixer.clipAction(gltf.animations[0]).setDuration(1.8).play()
       // 将动画混合器添加到mixers数组中
       this.mixers.push(mixer)
 
@@ -321,15 +325,106 @@ export default class Earth extends React.Component {
         mesh.position.set(x, 80, z)
         // 计算模型的旋转角度
         mesh.rotation.y = rotationAngle
-        // 计算模型位置
-
-        // bird2.position.set(x, 80, z)
-        // mesh.position.x -= 1.5 // 第一个模型沿X轴做正弦函数运动
-        // bird2.position.y += 1.5 // 第二个模型沿X轴做余弦函数运动
+        bird2.rotation.y = -rotationAngle
+        bird2.position.set(-x, 120, z)
       }
-      // animatex()
+      animatex()
     })
-    // 鸟2
+    // 裂空坐
+    loader.load(rayquazaRemastered, gltf => {
+      // 获取模型中的场景，并将其赋值给mesh
+      const mesh = gltf.scene.children[0]
+      // 设置模型的缩放比例
+      mesh.scale.set(15, 15, 15)
+      // 设置模型的位置
+      mesh.position.set(10, 50, 0)
+      // 设置模型的旋转角度
+      mesh.rotation.y = 0
+      mesh.rotation.z = 3.5
+      // 设置模型的阴影
+      mesh.castShadow = true
+      // 将模型添加到场景中
+      scene.add(mesh)
+      // 创建一个动画混合器，并将其赋值给mixer
+      const mixer = new THREE.AnimationMixer(mesh)
+      // 设置动画混合器的持续时间，并播放动画
+      mixer.clipAction(gltf.animations[0]).setDuration(3).play()
+      // 将动画混合器添加到mixers数组中
+      this.mixers.push(mixer)
+    })
+
+    // 固拉多
+    loader.load(primoGroudon, gltf => {
+      // 获取模型中的场景，并将其赋值给mesh
+      const mesh = gltf.scene.children[0]
+      // 设置模型的缩放比例
+      mesh.scale.set(3, 3, 3)
+      // 设置模型的位置
+      mesh.position.set(100, 0, 80)
+      // 设置模型的旋转角度
+      mesh.rotation.y = 0
+      mesh.rotation.z = 0
+      // 设置模型的阴影
+      mesh.castShadow = true
+      // 将模型添加到场景中
+      scene.add(mesh)
+    })
+
+    // 海皇牙
+    loader.load(kyogrePrimal, gltf => {
+      // 获取模型中的场景，并将其赋值给mesh
+      const mesh = gltf.scene.children[0]
+      // 设置模型的缩放比例
+      mesh.scale.set(3, 3, 3)
+      // 设置模型的位置
+      mesh.position.set(-180, 0, 138)
+      // 设置模型的旋转角度
+      mesh.rotation.y = 0
+      mesh.rotation.z = 0
+      // 设置模型的阴影
+      mesh.castShadow = true
+      // 将模型添加到场景中
+      scene.add(mesh)
+      function animate() {
+        requestAnimationFrame(animate)
+        // 更新角度
+        angle += speed * 0.01
+        rotationAngle -= speed * 0.01
+        // 计算模型在圆形轨道上的位置
+        const x = 320 * Math.cos(angle)
+        const z = 320 * Math.sin(angle)
+        // 更新模型位置
+        mesh.position.set(x, 0, z)
+        // 计算模型的旋转角度
+        mesh.rotation.z = rotationAngle
+      }
+      // animate()
+    })
+
+    // // 闪电鸟
+    // loader.load(zapdosGalarian, gltf => {
+    //   // 获取模型中的场景，并将其赋值给mesh
+    //   const mesh = gltf.scene.children[0]
+    //   // 设置模型的缩放比例
+    //   mesh.scale.set(25, 25, 25)
+    //   // 设置模型的位置
+    //   mesh.position.set(-70, 45, 138)
+    //   // 设置模型的旋转角度
+    //   mesh.rotation.y = 0
+    //   mesh.rotation.z = 0
+    //   // 设置模型的阴影
+    //   mesh.castShadow = true
+    //   // 将模型添加到场景中
+    //   scene.add(mesh)
+    //   // 创建一个动画混合器，并将其赋值给mixer
+    //   const mixer = new THREE.AnimationMixer(mesh)
+    //   // 设置动画混合器的持续时间，并播放动画
+    //   mixer.clipAction(gltf.animations[0]).setDuration(3).play()
+    //   // 将动画混合器添加到mixers数组中
+    //   this.mixers.push(mixer)
+    // })
+
+    // 凤凰
     // 加载flamingoModel模型，并将其赋值给loader
     loader.load(fh, gltf => {
       // 获取模型中的场景，并将其赋值给mesh
@@ -363,12 +458,8 @@ export default class Earth extends React.Component {
         // 计算模型的旋转角度
         mesh.rotation.y = rotationAngle
         // 计算模型位置
-
-        // bird2.position.set(x, 80, z)
-        // mesh.position.x -= 1.5 // 第一个模型沿X轴做正弦函数运动
-        // bird2.position.y += 1.5 // 第二个模型沿X轴做余弦函数运动
       }
-      animatex()
+      // animatex()
     })
 
     // 虹
