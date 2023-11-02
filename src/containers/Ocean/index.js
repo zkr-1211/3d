@@ -331,27 +331,27 @@ export default class Earth extends React.Component {
       animatex()
     })
     // 裂空坐
-    loader.load(rayquazaRemastered, gltf => {
-      // 获取模型中的场景，并将其赋值给mesh
-      const mesh = gltf.scene.children[0]
-      // 设置模型的缩放比例
-      mesh.scale.set(15, 15, 15)
-      // 设置模型的位置
-      mesh.position.set(10, 50, 0)
-      // 设置模型的旋转角度
-      mesh.rotation.y = 0
-      mesh.rotation.z = 3.5
-      // 设置模型的阴影
-      mesh.castShadow = true
-      // 将模型添加到场景中
-      scene.add(mesh)
-      // 创建一个动画混合器，并将其赋值给mixer
-      const mixer = new THREE.AnimationMixer(mesh)
-      // 设置动画混合器的持续时间，并播放动画
-      mixer.clipAction(gltf.animations[0]).setDuration(3).play()
-      // 将动画混合器添加到mixers数组中
-      this.mixers.push(mixer)
-    })
+    // loader.load(rayquazaRemastered, gltf => {
+    //   // 获取模型中的场景，并将其赋值给mesh
+    //   const mesh = gltf.scene.children[0]
+    //   // 设置模型的缩放比例
+    //   mesh.scale.set(15, 15, 15)
+    //   // 设置模型的位置
+    //   mesh.position.set(10, 50, 0)
+    //   // 设置模型的旋转角度
+    //   mesh.rotation.y = 0
+    //   mesh.rotation.z = 3.5
+    //   // 设置模型的阴影
+    //   mesh.castShadow = true
+    //   // 将模型添加到场景中
+    //   scene.add(mesh)
+    //   // 创建一个动画混合器，并将其赋值给mixer
+    //   const mixer = new THREE.AnimationMixer(mesh)
+    //   // 设置动画混合器的持续时间，并播放动画
+    //   mixer.clipAction(gltf.animations[0]).setDuration(3).play()
+    //   // 将动画混合器添加到mixers数组中
+    //   this.mixers.push(mixer)
+    // })
 
     // 固拉多
     loader.load(primoGroudon, gltf => {
