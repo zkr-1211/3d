@@ -78,7 +78,10 @@
     "test": "node scripts/test.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build -r https://github.com/zkr-1211/3d.git -b gh-pages",
-    "vercel": "vercel --prod"
+    "vercel": "vercel --prod",
+    "CICD:rollback": "node CICD.js rollback",
+    "CICD:deploy": "node CICD.js deploy",
+    "CICD:deployBackup": "node CICD.js deployBackup"
   },
   "eslintConfig": {
     "extends": [
@@ -158,6 +161,7 @@
   "devDependencies": {
     "browserslist": "^4.21.5",
     "caniuse-lite": "^1.0.30001477",
+    "gtxy-sftp": "^1.0.1",
     "stylus": "^0.56.0",
     "stylus-loader": "^6.2.0",
     "vercel": "^28.2.5",
