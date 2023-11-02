@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "./static/css/main.2c15d103.css",
+    "main.js": "./static/js/main.702486c3.js",
+    "static/css/327.2a22ec3e.chunk.css": "./static/css/327.2a22ec3e.chunk.css",
+    "static/js/327.27c8a8e6.chunk.js": "./static/js/327.27c8a8e6.chunk.js",
+    "static/js/27.5e6c119d.chunk.js": "./static/js/27.5e6c119d.chunk.js",
+    "static/js/591.d0c1781a.chunk.js": "./static/js/591.d0c1781a.chunk.js",
+    "static/media/issum_the_town_on_capital_isle.glb": "./static/media/issum_the_town_on_capital_isle.d98325016dca8c2dbb40.glb",
+    "static/media/zapdos_galarian.glb": "./static/media/zapdos_galarian.703fde6b460736153319.glb",
+    "static/media/island.glb": "./static/media/island.a411b3fbddd0f46ab718.glb",
+    "static/media/fh.glb": "./static/media/fh.2d9d116d6b6ae8ec2e5f.glb",
+    "static/media/kyogre_primal.glb": "./static/media/kyogre_primal.c8df1ad00c829ee52354.glb",
+    "static/media/primo_groudon.glb": "./static/media/primo_groudon.a77bab70e4b7bf704035.glb",
+    "static/media/rayquaza_remastered.glb": "./static/media/rayquaza_remastered.d2572dbf70a3278499dc.glb",
+    "static/media/waternormals.jpg": "./static/media/waternormals.537ec85b965d414829ab.jpg",
+    "static/media/lensflare0.png": "./static/media/lensflare0.0f76abc7ed1959fe0790.png",
+    "static/media/flamingo.glb": "./static/media/flamingo.e65cf9438e4210a07dcd.glb",
+    "index.html": "./index.html"
+  },
+  "entrypoints": [
+    "static/css/main.2c15d103.css",
+    "static/js/main.702486c3.js"
+  ]
+}
