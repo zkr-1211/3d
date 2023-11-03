@@ -4,10 +4,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Water } from 'three/examples/jsm/objects/Water'
-import { Sky } from 'three/examples/jsm/objects/Sky'
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js'
-import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js'
-import waterTexture from '@/containers/Ocean/images/waternormals.jpg'
 import islandModel from '@/containers/Ocean/models/island.glb'
 import issum_the_town_on_capital_isle from '@/containers/Ocean/models/issum_the_town_on_capital_isle.glb'
 import flamingoModel from '@/containers/Ocean/models/flamingo.glb'
@@ -19,10 +16,11 @@ import zapdosGalarian from '@/containers/Ocean/models/zapdos_galarian.glb'
 import Animations from '@/assets/utils/animations'
 import vertexShader from '@/containers/Ocean/shaders/rainbow/vertex.glsl'
 import fragmentShader from '@/containers/Ocean/shaders/rainbow/fragment.glsl'
-import lensflareTexture0 from '@/containers/Ocean/images/lensflare0.png'
-import lensflareTexture1 from '@/containers/Ocean/images/lensflare1.png'
 import Stats from 'three/examples/jsm/libs/stats.module'
-
+import { initWater } from './map/water'
+import { initSky } from './map/sky'
+import { initSun } from './map/sun'
+import { initLight} from './map/light'
 export default function Earth() {
   const [loadingProcess, setLoadingProcess] = useState(0)
   const [sceneReady, setSceneReady] = useState(false)
@@ -93,46 +91,6 @@ export default function Earth() {
 
     const stats = new Stats()
     document.documentElement.appendChild(stats.dom)
-
-    // 创建环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
-    scene.add(ambientLight)
-
-    // 创建一个方向光
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1)
-    // 设置方向光线的颜色
-    dirLight.color.setHSL(0.1, 1, 0.95)
-    // 设置方向光线的方向
-    dirLight.position.set(-1, 1.75, 1)
-    // 将方向光线的方向乘以30
-    dirLight.position.multiplyScalar(30)
-    scene.add(dirLight)
-
-    // 太阳点光源
-    const pointLight = new THREE.PointLight(0xffffff, 1.2, 2000)
-    pointLight.color.setHSL(0.995, 0.5, 0.9)
-    pointLight.position.set(0, 45, -2000)
-    // 加载光晕贴图
-    const textureLoader = new THREE.TextureLoader()
-    const textureFlare0 = textureLoader.load(lensflareTexture0)
-    const textureFlare1 = textureLoader.load(lensflareTexture1)
-    // 镜头光晕
-    const lensflare = new Lensflare()
-    // 添加一个lensflare元素，参数为纹理，位置，颜色
-    lensflare.addElement(new LensflareElement(textureFlare0, 600, 0, pointLight.color))
-    // 添加一个lensflare元素，参数为纹理，位置，颜色
-    lensflare.addElement(new LensflareElement(textureFlare1, 60, 0.6))
-    // 添加一个lensflare元素，参数为纹理，位置，颜色
-    lensflare.addElement(new LensflareElement(textureFlare1, 70, 0.7))
-    // 添加一个lensflare元素，参数为纹理，位置，颜色
-    lensflare.addElement(new LensflareElement(textureFlare1, 120, 0.9))
-    // 添加一个lensflare元素，参数为纹理，位置，颜色
-    lensflare.addElement(new LensflareElement(textureFlare1, 70, 1))
-    // 将lensflare添加到pointLight上
-    pointLight.add(lensflare)
-    // 将pointLight添加到scene中
-    scene.add(pointLight)
-
     // 监听窗口大小改变事件，调整相机的宽高比，并重新渲染
     window.addEventListener(
       'resize',
@@ -143,67 +101,10 @@ export default function Earth() {
       },
       false
     )
-
-    // 海
-    // 创建一个平面几何体，宽度为10000，高度为10000
-    const waterGeometry = new THREE.PlaneGeometry(10000, 10000)
-    // 创建一个水体，使用上面创建的平面几何体，以及一些参数
-    const water = new Water(waterGeometry, {
-      textureWidth: 512,
-      textureHeight: 512,
-      // 加载法线贴图，并设置其环绕方式为重复
-      waterNormals: new THREE.TextureLoader().load(waterTexture, texture => {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-      }),
-      // 设置太阳方向
-      sunDirection: new THREE.Vector3(),
-      // 设置太阳颜色
-      sunColor: 0xffffff,
-      // 设置水体颜色
-      waterColor: 0x0072ff,
-      // 设置水体失真系数
-      distortionScale: 4,
-      // 设置雾
-      fog: scene.fog !== undefined
-    })
-    // 设置水体的旋转角度
-    water.rotation.x = -Math.PI / 2
-    // 将水体添加到场景中
-    scene.add(water)
-
-    // 天空
-    // 创建天空
-    const sky = new Sky()
-    // 设置天空的缩放比例
-    sky.scale.setScalar(10000)
-    // 将天空添加到场景中
-    scene.add(sky)
-    // 获取天空的uniforms
-    const skyUniforms = sky.material.uniforms
-    // 设置天空的亮度
-    skyUniforms['turbidity'].value = 20
-    // 设置天空的瑞利系数
-    skyUniforms['rayleigh'].value = 2
-    // 设置天空的米色系数
-    skyUniforms['mieCoefficient'].value = 0.005
-    // 设置天空的米色方向性
-    skyUniforms['mieDirectionalG'].value = 0.8
-
-    // 太阳
-    const sun = new THREE.Vector3()
-    // 创建PMREMGenerator
-    const pmremGenerator = new THREE.PMREMGenerator(renderer)
-    // 获取太阳的极角和方位角
-    const phi = THREE.MathUtils.degToRad(88)
-    const theta = THREE.MathUtils.degToRad(180)
-    // 计算太阳的位置
-    sun.setFromSphericalCoords(1, phi, theta)
-    // 设置天空的太阳位置
-    sky.material.uniforms['sunPosition'].value.copy(sun)
-    // 设置水的太阳方向
-    water.material.uniforms['sunDirection'].value.copy(sun).normalize()
-    // 设置场景的环境贴图
-    scene.environment = pmremGenerator.fromScene(sky).texture
+    initLight(scene)
+    const { water } = initWater(scene)
+    const { sky } = initSky(scene)
+    const { sun } = initSun(renderer, scene, sky, water)
 
     // 创建加载管理器
     const manager = new THREE.LoadingManager()
