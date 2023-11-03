@@ -1,5 +1,5 @@
 import '@/containers/Ocean/index.styl'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -23,28 +23,19 @@ import lensflareTexture0 from '@/containers/Ocean/images/lensflare0.png'
 import lensflareTexture1 from '@/containers/Ocean/images/lensflare1.png'
 import Stats from 'three/examples/jsm/libs/stats.module'
 
-export default class Earth extends React.Component {
-  constructor() {
-    super()
-    this.mixers = []
-  }
+export default function Earth() {
+  const [loadingProcess, setLoadingProcess] = useState(0)
+  const [sceneReady, setSceneReady] = useState(false)
+  const mixers = []
 
-  state = {
-    loadingProcess: 0,
-    sceneReady: false
-  }
-
-  componentDidMount() {
-    this.initThree()
-  }
-
-  componentWillUnmount() {
-    this.setState = () => {
-      return
+  useEffect(() => {
+    initThree()
+    return () => {
+      // 在组件卸载时清除副作用
     }
-  }
+  }, [])
 
-  initThree = () => {
+  const initThree = () => {
     // 创建一个新的 THREE.Clock 对象
     const clock = new THREE.Clock()
 
@@ -220,13 +211,13 @@ export default class Earth extends React.Component {
     manager.onProgress = async (url, loaded, total) => {
       // 加载进度达到100%时，执行回调函数
       if (Math.floor((loaded / total) * 100) === 100) {
-        this.setState({ loadingProcess: Math.floor((loaded / total) * 100) })
+        setLoadingProcess(Math.floor((loaded / total) * 100))
         // 执行动画，让相机移动到指定位置，并设置场景准备完毕
-        // Animations.animateCamera(camera, controls, { x: 0, y: 40, z: 140 }, { x: 0, y: 0, z: 0 }, 1000, () => {
-        //   this.setState({ sceneReady: true })
-        // })
+        Animations.animateCamera(camera, controls, { x: 0, y: 40, z: 140 }, { x: 0, y: 0, z: 0 }, 4000, () => {
+          setSceneReady(true)
+        })
       } else {
-        this.setState({ loadingProcess: Math.floor((loaded / total) * 100) })
+        setLoadingProcess(Math.floor((loaded / total) * 100))
       }
     }
 
@@ -305,14 +296,14 @@ export default class Earth extends React.Component {
       // 设置动画混合器的持续时间，并播放动画
       mixer.clipAction(gltf.animations[0]).setDuration(1.8).play()
       // 将动画混合器添加到mixers数组中
-      this.mixers.push(mixer)
+      mixers.push(mixer)
 
       // 创建一个动画混合器，并将其赋值给mixer2
       const mixer2 = new THREE.AnimationMixer(bird2)
       // 设置动画混合器的持续时间，并播放动画
       mixer2.clipAction(gltf.animations[0]).setDuration(1.8).play()
       // 将动画混合器添加到mixers数组中
-      this.mixers.push(mixer2)
+      mixers.push(mixer2)
       function animatex() {
         requestAnimationFrame(animatex)
         // 更新角度
@@ -331,27 +322,27 @@ export default class Earth extends React.Component {
       animatex()
     })
     // 裂空坐
-    // loader.load(rayquazaRemastered, gltf => {
-    //   // 获取模型中的场景，并将其赋值给mesh
-    //   const mesh = gltf.scene.children[0]
-    //   // 设置模型的缩放比例
-    //   mesh.scale.set(15, 15, 15)
-    //   // 设置模型的位置
-    //   mesh.position.set(10, 50, 0)
-    //   // 设置模型的旋转角度
-    //   mesh.rotation.y = 0
-    //   mesh.rotation.z = 3.5
-    //   // 设置模型的阴影
-    //   mesh.castShadow = true
-    //   // 将模型添加到场景中
-    //   scene.add(mesh)
-    //   // 创建一个动画混合器，并将其赋值给mixer
-    //   const mixer = new THREE.AnimationMixer(mesh)
-    //   // 设置动画混合器的持续时间，并播放动画
-    //   mixer.clipAction(gltf.animations[0]).setDuration(3).play()
-    //   // 将动画混合器添加到mixers数组中
-    //   this.mixers.push(mixer)
-    // })
+    loader.load(rayquazaRemastered, gltf => {
+      // 获取模型中的场景，并将其赋值给mesh
+      const mesh = gltf.scene.children[0]
+      // 设置模型的缩放比例
+      mesh.scale.set(15, 15, 15)
+      // 设置模型的位置
+      mesh.position.set(10, 50, 0)
+      // 设置模型的旋转角度
+      mesh.rotation.y = 0
+      mesh.rotation.z = 3.5
+      // 设置模型的阴影
+      mesh.castShadow = true
+      // 将模型添加到场景中
+      scene.add(mesh)
+      // 创建一个动画混合器，并将其赋值给mixer
+      const mixer = new THREE.AnimationMixer(mesh)
+      // 设置动画混合器的持续时间，并播放动画
+      mixer.clipAction(gltf.animations[0]).setDuration(3).play()
+      // 将动画混合器添加到mixers数组中
+      mixers.push(mixer)
+    })
 
     // 固拉多
     loader.load(primoGroudon, gltf => {
@@ -401,28 +392,28 @@ export default class Earth extends React.Component {
       // animate()
     })
 
-    // // 闪电鸟
-    // loader.load(zapdosGalarian, gltf => {
-    //   // 获取模型中的场景，并将其赋值给mesh
-    //   const mesh = gltf.scene.children[0]
-    //   // 设置模型的缩放比例
-    //   mesh.scale.set(25, 25, 25)
-    //   // 设置模型的位置
-    //   mesh.position.set(-70, 45, 138)
-    //   // 设置模型的旋转角度
-    //   mesh.rotation.y = 0
-    //   mesh.rotation.z = 0
-    //   // 设置模型的阴影
-    //   mesh.castShadow = true
-    //   // 将模型添加到场景中
-    //   scene.add(mesh)
-    //   // 创建一个动画混合器，并将其赋值给mixer
-    //   const mixer = new THREE.AnimationMixer(mesh)
-    //   // 设置动画混合器的持续时间，并播放动画
-    //   mixer.clipAction(gltf.animations[0]).setDuration(3).play()
-    //   // 将动画混合器添加到mixers数组中
-    //   this.mixers.push(mixer)
-    // })
+    // 闪电鸟
+    loader.load(zapdosGalarian, gltf => {
+      // 获取模型中的场景，并将其赋值给mesh
+      const mesh = gltf.scene.children[0]
+      // 设置模型的缩放比例
+      mesh.scale.set(25, 25, 25)
+      // 设置模型的位置
+      mesh.position.set(-70, 45, 138)
+      // 设置模型的旋转角度
+      mesh.rotation.y = 0
+      mesh.rotation.z = 0
+      // 设置模型的阴影
+      mesh.castShadow = true
+      // 将模型添加到场景中
+      scene.add(mesh)
+      // 创建一个动画混合器，并将其赋值给mixer
+      const mixer = new THREE.AnimationMixer(mesh)
+      // 设置动画混合器的持续时间，并播放动画
+      mixer.clipAction(gltf.animations[0]).setDuration(3).play()
+      // 将动画混合器添加到mixers数组中
+      mixers.push(mixer)
+    })
 
     // 凤凰
     // 加载flamingoModel模型，并将其赋值给loader
@@ -444,7 +435,7 @@ export default class Earth extends React.Component {
       // 设置动画混合器的持续时间，并播放动画
       mixer.clipAction(gltf.animations[0]).setDuration(3).play()
       // 将动画混合器添加到mixers数组中
-      this.mixers.push(mixer)
+      mixers.push(mixer)
       function animatex() {
         requestAnimationFrame(animatex)
         // 更新角度
@@ -513,7 +504,59 @@ export default class Earth extends React.Component {
         element: document.querySelector('.point-5')
       }
     ]
-
+    function initTween(start, target, delay) {
+      const tween = new TWEEN.Tween(start).to(target, delay || 1000)
+      tween.start()
+    }
+    // 滚动延迟函数
+    function stopWheel() {
+      if (moveWheelStart) {
+        isWheel = false
+        moveWheelStart = false
+        moveWheelStop = true
+        // 这里写停止时调用的方法
+      }
+    }
+    let wheelClock, isClick
+    // 执行滚动动画
+    let isWheel = false
+    // 滚动方向
+    let wheelDelta = false
+    let moveWheelStop = true
+    let moveWheelStart = false
+    // 滚轮动画
+    function initScroll() {
+      const cp = camera.position
+      if (wheelDelta) {
+        // 前
+        cp.y -= 1
+      } else {
+        cp.y += 2
+      }
+    }
+    // 监听鼠标滚动
+    function onDocumentMouseWheel(event) {
+      // controls.noZoom = controls.maxDistance > 1000
+      isWheel = true
+      if (event.wheelDelta > 0) {
+        wheelDelta = true
+      } else if (event.wheelDelta < 0) {
+        wheelDelta = false
+      }
+      // 滚动
+      if (moveWheelStop) {
+        moveWheelStop = false
+        moveWheelStart = true
+        wheelClock = setTimeout(stopWheel, 800)
+      } else {
+        clearTimeout(wheelClock)
+        wheelClock = setTimeout(stopWheel, 800)
+      }
+      camera.lookAt(scene.position)
+      camera.updateProjectionMatrix()
+    }
+    const map = document.querySelector('canvas.webgl')
+    map.addEventListener('wheel', onDocumentMouseWheel)
     // 遍历所有点元素，添加点击事件
     document.querySelectorAll('.point').forEach(item => {
       item.addEventListener(
@@ -561,8 +604,8 @@ export default class Earth extends React.Component {
       controls && controls.update()
       // 更新动画
       const delta = clock.getDelta()
-      this.mixers &&
-        this.mixers.forEach(item => {
+      mixers &&
+        mixers.forEach(item => {
           item.update(delta)
         })
       // 更新TWEEN动画
@@ -570,7 +613,7 @@ export default class Earth extends React.Component {
       TWEEN && TWEEN.update()
       // 更新相机位置
       camera && (camera.position.y += Math.sin(timer) * 0.05)
-      if (this.state.sceneReady) {
+      if (sceneReady) {
         // 遍历每个点
         for (const point of points) {
           // 获取2D屏幕位置
@@ -596,55 +639,61 @@ export default class Earth extends React.Component {
           point.element.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`
         }
       }
+      // 滚轮动画
+      isWheel && initScroll()
       renderer.render(scene, camera)
     }
     animate()
   }
 
-  render() {
-    return (
-      <div className="ocean">
-        <canvas className="webgl"></canvas>
-        {this.state.loadingProcess === 100 ? (
-          ''
-        ) : (
-          <div className="loading">
-            <span className="progress">{this.state.loadingProcess} %</span>
-          </div>
-        )}
-        <div className="point point-0">
-          <div className="label label-0">1</div>
-          <div className="text">
-            灯塔：矗立在海岸的岩石之上，白色的塔身以及红色的塔屋，在湛蓝色的天空和深蓝色大海的映衬下，显得如此醒目和美丽。
-          </div>
+  const renderLoading = () => {
+    if (loadingProcess === 100) {
+      return null
+    } else {
+      return (
+        <div className="loading">
+          <span className="progress">{loadingProcess} %</span>
         </div>
-        <div className="point point-1">
-          <div className="label label-1">2</div>
-          <div className="text">
-            小船：梦中又见那宁静的大海，我前进了，驶向远方，我知道我是船，只属于远方。这一天，我用奋斗作为白帆，要和明天一起飘扬，呼喊。
-          </div>
-        </div>
-        <div className="point point-2">
-          <div className="label label-2">3</div>
-          <div className="text">
-            沙滩：宇宙展开的一小角。不想说来这里是暗自疗伤，那过于矫情，只想对每一粒沙子，每一朵浪花问声你们好吗
-          </div>
-        </div>
-        <div className="point point-3">
-          <div className="label label-3">4</div>
-          <div className="text">
-            飞鸟：在苍茫的大海上，狂风卷集着乌云。在乌云和大海之间，海燕像黑色的闪电，在高傲地飞翔。
-          </div>
-        </div>
-        <div className="point point-4">
-          <div className="label label-4">5</div>
-          <div className="text">礁石：寂寞又怎么样？礁石都不说话，但是水流过去之后，礁石留下。</div>
-        </div>
-        <div className="point point-5">
-          <div className="label label-5">岛2</div>
-          <div className="text">黑暗森林。</div>
+      )
+    }
+  }
+
+  return (
+    <div className="ocean">
+      <canvas className="webgl"></canvas>
+      {renderLoading()}
+      <div className="point point-0">
+        <div className="label label-0">1</div>
+        <div className="text">
+          灯塔：矗立在海岸的岩石之上，白色的塔身以及红色的塔屋，在湛蓝色的天空和深蓝色大海的映衬下，显得如此醒目和美丽。
         </div>
       </div>
-    )
-  }
+      <div className="point point-1">
+        <div className="label label-1">2</div>
+        <div className="text">
+          小船：梦中又见那宁静的大海，我前进了，驶向远方，我知道我是船，只属于远方。这一天，我用奋斗作为白帆，要和明天一起飘扬，呼喊。
+        </div>
+      </div>
+      <div className="point point-2">
+        <div className="label label-2">3</div>
+        <div className="text">
+          沙滩：宇宙展开的一小角。不想说来这里是暗自疗伤，那过于矫情，只想对每一粒沙子，每一朵浪花问声你们好吗
+        </div>
+      </div>
+      <div className="point point-3">
+        <div className="label label-3">4</div>
+        <div className="text">
+          飞鸟：在苍茫的大海上，狂风卷集着乌云。在乌云和大海之间，海燕像黑色的闪电，在高傲地飞翔。
+        </div>
+      </div>
+      <div className="point point-4">
+        <div className="label label-4">5</div>
+        <div className="text">礁石：寂寞又怎么样？礁石都不说话，但是水流过去之后，礁石留下。</div>
+      </div>
+      <div className="point point-5">
+        <div className="label label-5">岛2</div>
+        <div className="text">黑暗森林。</div>
+      </div>
+    </div>
+  )
 }
