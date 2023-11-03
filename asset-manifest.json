@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "./static/css/main.2c15d103.css",
-    "main.js": "./static/js/main.fa6a1a12.js",
+    "main.js": "./static/js/main.702486c3.js",
     "static/css/327.2a22ec3e.chunk.css": "./static/css/327.2a22ec3e.chunk.css",
-    "static/js/327.f0d93a29.chunk.js": "./static/js/327.f0d93a29.chunk.js",
+    "static/js/327.27c8a8e6.chunk.js": "./static/js/327.27c8a8e6.chunk.js",
     "static/js/27.5e6c119d.chunk.js": "./static/js/27.5e6c119d.chunk.js",
     "static/js/591.d0c1781a.chunk.js": "./static/js/591.d0c1781a.chunk.js",
     "static/media/issum_the_town_on_capital_isle.glb": "./static/media/issum_the_town_on_capital_isle.d98325016dca8c2dbb40.glb",
@@ -20,6 +20,6 @@
   },
   "entrypoints": [
     "static/css/main.2c15d103.css",
-    "static/js/main.fa6a1a12.js"
+    "static/js/main.702486c3.js"
   ]
 }
